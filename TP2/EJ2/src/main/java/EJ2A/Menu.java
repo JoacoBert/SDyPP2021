@@ -13,35 +13,31 @@ public class Menu implements Runnable {
 
     public void MenuPrincipal() {
         boolean menu = true;
-        while (menu) {
-            try {
-                canalSalida.println("||==============================================================||");
-                canalSalida.println("||                Ruleta del Casino de Pinamar                  ||");
-                canalSalida.println("||==============================================================||");
-                canalSalida.println("Seleccione una opción del menú");
-                canalSalida.println("1 -- Automatico ");
-                canalSalida.println("2 -- Manual");
-                canalSalida.println("0 -- Salir");
-                int option = leerOpcion(0, 7);
-                switch (option) {
-                    case 1:
-                        automatico();
-                        break;
-                    case 2:
-                        break;
-                    case 0:
-                        menu = false;
-                        break;
-                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            canalSalida.println("||==============================================================||");
+            canalSalida.println("||                         Sistema Bancario                     ||");
+            canalSalida.println("||==============================================================||");
+            canalSalida.println("Seleccione una opción del menú");
+            canalSalida.println("1 -- Realizar operaciones de extración y depositos ");
+            canalSalida.println("0 -- Salir");
+            int option = leerOpcion(0, 7);
+            switch (option) {
+                case 1:
+                    automatico();
+                    break;
+                case 0:
+                    menu = false;
+                    break;
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
-	private int leerOpcion(int valorMax, int valorMin) {
+    private int leerOpcion(int valorMax, int valorMin) {
         int option = valorMax - 1;
         while (option < valorMax || option > valorMin) {
             try {
@@ -53,34 +49,41 @@ public class Menu implements Runnable {
         return option;
     }
 
-	public void automatico() {
+    public void automatico() throws NumberFormatException, IOException {
 
-		double dineroInicial = 10000;
-		double sum = dineroInicial;
-		
-		try {
-			CuentaBanco cuentaBanco = new CuentaBanco(dineroInicial);
-			Random random = new Random();		
-			ArrayList<Thread> threads = new ArrayList<Thread>();
-			Thread t;
-			
-			
-			for(int i=0; i<5; i++) {
-				ClienteBanco cliente = new ClienteBanco(i,random.nextInt(5000),random.nextInt(5000),cuentaBanco);
-				System.out.println(cliente.clienteToString());
-				sum += cliente.diferencia();
-				t = new Thread(cliente);
-				threads.add(t);
-				t.start();
-			}
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println("Su balance final es: "+ sum +"?");
-	}
+        double dineroInicial;
+        int cantClientes;
+
+        canalSalida.println("Ingrese la suma de dinero inicial");
+        dineroInicial = Double.valueOf(canalEntrada.readLine());
+        canalSalida.println("¿Cuántos clientes desea que operen sobre la cuenta?");
+        cantClientes = Integer.valueOf(canalEntrada.readLine());
+
+        double sum = dineroInicial;
+
+        try {
+            CuentaBanco cuentaBanco = new CuentaBanco(dineroInicial);
+            Random random = new Random();
+            int dineroDepExt = (int) (dineroInicial / 2);
+            ArrayList<Thread> threads = new ArrayList<Thread>();
+            Thread t;
+
+            for (int i = 0; i < cantClientes; i++) {
+                ClienteBanco cliente = new ClienteBanco(i, random.nextInt(dineroDepExt), random.nextInt(dineroDepExt),
+                        cuentaBanco);
+                System.out.println(cliente.clienteToString());
+                sum += cliente.diferencia();
+                t = new Thread(cliente);
+                threads.add(t);
+                t.start();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Su balance final es: " + sum + "?");
+    }
 
     @Override
     public void run() {
@@ -88,4 +91,3 @@ public class Menu implements Runnable {
 
     }
 }
-

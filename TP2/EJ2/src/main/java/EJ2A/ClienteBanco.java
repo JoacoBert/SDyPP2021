@@ -7,13 +7,13 @@ public class ClienteBanco implements Runnable {
     private double deposito;
     private CuentaBanco cuentaBanco;
 
-    public ClienteBanco(int id_client, double vExtraccion, double vDeposito, CuentaBanco vCuentaBanco ) {
-		super();
-		this.id_client = id_client;
-		this.extraccion = vExtraccion;
-		this.deposito = vDeposito;
-		this.cuentaBanco = vCuentaBanco;
-	}
+    public ClienteBanco(int id_client, double vExtraccion, double vDeposito, CuentaBanco vCuentaBanco) {
+        super();
+        this.id_client = id_client;
+        this.extraccion = vExtraccion;
+        this.deposito = vDeposito;
+        this.cuentaBanco = vCuentaBanco;
+    }
 
     public String clienteToString() {
         return ("Cliente: " + id_client + ", Extraccion: " + extraccion + ", Deposito:" + deposito);
@@ -25,8 +25,8 @@ public class ClienteBanco implements Runnable {
 
     @Override
     public void run() {
-        ThreadDeposito threadDeposit = new ThreadDeposito(cuentaBanco, deposito);
-        ThreadExtraccion threadExtract = new ThreadExtraccion(cuentaBanco, extraccion);
+        ThreadDeposito threadDeposit = new ThreadDeposito(cuentaBanco, deposito, id_client);
+        ThreadExtraccion threadExtract = new ThreadExtraccion(cuentaBanco, extraccion, id_client);
         Thread tThreadDeposit = new Thread(threadDeposit);
         Thread tThreadExtract = new Thread(threadExtract);
         tThreadDeposit.start();

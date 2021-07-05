@@ -18,11 +18,11 @@ public class CuentaBanco {
 		return this.balance;
 	}
 	
-	public void depositar(double dineroDeposito) {
+	public void depositar(double dineroDeposito, int id_cliente) {
 		try {
 			Thread.sleep(80);
 			this.balance += dineroDeposito;
-			System.out.println("Deposito exitoso");
+			System.out.println("Deposito exitoso del cliente " + id_cliente);
 			//log.info("Deposito exitoso");
 			System.out.println("Su balance es de " + balance);
 		} catch (InterruptedException e) {
@@ -32,16 +32,16 @@ public class CuentaBanco {
 		
 	}
 	
-	public void extraer(double dineroExtraccion) {
+	public void extraer(double dineroExtraccion, int id_cliente) {
 		try {
-			Thread.sleep(60);
+			Thread.sleep(40);
 				if (balance>=dineroExtraccion) {
 					balance -= dineroExtraccion;
-					System.out.println("Extraccion exitosa");
+					System.out.println("Extraccion exitosa del cliente " + id_cliente);
+					System.out.println("Su balance es de " + balance);
 					//log.info("Extraccion exitosa");
-        			System.out.println("Su balance es de " + balance);
 				}else {
-					System.out.println("Su balance es insuficiente para realizar esta accion");
+					System.out.println("El balance del cliente " + id_cliente +" es insuficiente para realizar esta accion");
 				}
 		} catch (InterruptedException e) {
 			System.out.println("Error - " + e.getMessage());
