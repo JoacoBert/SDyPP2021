@@ -1,4 +1,4 @@
-package main.java.EJ4A;
+package EJ4A;
 
 import java.awt.Color;
 import java.awt.Graphics;

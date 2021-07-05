@@ -1,4 +1,4 @@
-package main.java.EJ4A;
+package EJ4A;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
