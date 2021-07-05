@@ -1,0 +1,3 @@
+mvn clean package
+docker build -t joaquinbert/tp2_ej2a .
+docker push joaquinbert/tp2_ej2a:latest

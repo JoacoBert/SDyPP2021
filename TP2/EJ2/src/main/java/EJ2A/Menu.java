@@ -51,38 +51,7 @@ public class Menu implements Runnable {
 
     public void automatico() throws NumberFormatException, IOException {
 
-        double dineroInicial;
-        int cantClientes;
-
-        canalSalida.println("Ingrese la suma de dinero inicial");
-        dineroInicial = Double.valueOf(canalEntrada.readLine());
-        canalSalida.println("¿Cuántos clientes desea que operen sobre la cuenta?");
-        cantClientes = Integer.valueOf(canalEntrada.readLine());
-
-        double sum = dineroInicial;
-
-        try {
-            CuentaBanco cuentaBanco = new CuentaBanco(dineroInicial);
-            Random random = new Random();
-            int dineroDepExt = (int) (dineroInicial / 2);
-            ArrayList<Thread> threads = new ArrayList<Thread>();
-            Thread t;
-
-            for (int i = 0; i < cantClientes; i++) {
-                ClienteBanco cliente = new ClienteBanco(i, random.nextInt(dineroDepExt), random.nextInt(dineroDepExt),
-                        cuentaBanco);
-                System.out.println(cliente.clienteToString());
-                sum += cliente.diferencia();
-                t = new Thread(cliente);
-                threads.add(t);
-                t.start();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Su balance final es: " + sum + "?");
+      
     }
 
     @Override
