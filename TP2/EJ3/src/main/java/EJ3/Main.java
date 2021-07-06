@@ -1,6 +1,7 @@
 package EJ3;
 
 import java.rmi.NotBoundException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -25,10 +26,11 @@ public class Main {
 	
 	public Main() {
 
-		System.out.println("Ingrese la cantidad de clientes que atendera el sistema");
-		Scanner teclado = new Scanner(System.in);
+		Random random = new Random();
 
-		int rep = teclado.nextInt();
+		int rep = random.nextInt(35);
+
+		System.out.println("Se crearon " + rep + " clientes");
 
 		for (int i=0; i<rep; i++) {
 			newClient(i+1);
