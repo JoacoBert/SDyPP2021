@@ -24,7 +24,7 @@ implementar mínimamente:
 
 
 
-### Resolución
+## Resolución
     Ejecutar: docker run joaquinbert/tp2_ej3:latest
 
     Una vez ejecutado el comando, se inicia el Balanceador que se encarga de crear o eliminar los servidores, dependendiendo de lo que la red solicite para atender los clientes. La cantidad de clientes se genera aleatoriamente al inicio del programa.
