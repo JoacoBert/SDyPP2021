@@ -55,7 +55,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>main.java.EJ4A.Server</mainClass>
+                <mainClass>EJ4A.Client</mainClass>
               </manifest>
             </archive>
           </configuration>
