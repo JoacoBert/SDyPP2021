@@ -1,4 +1,4 @@
-# Trabajo practico 2 - Ejercicio 2 - Punto A
+# Trabajo practico 2 - Ejercicio 2 - Punto B
 
 ## Consigna 
 Un banco tiene un proceso para realizar depósitos en cuentas, y otro para

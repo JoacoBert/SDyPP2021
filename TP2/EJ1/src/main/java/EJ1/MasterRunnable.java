@@ -8,12 +8,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
 
+/*
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+*/
 public class MasterRunnable implements Runnable {
 
-	private final static Logger log = LoggerFactory.getLogger(Master.class);
+	// private final static Logger log = LoggerFactory.getLogger(Master.class);
 	private ArrayList<Peer_Data> listOfPeerData = new ArrayList<Peer_Data>();
 	private Socket peerSocket;
 	private BufferedReader inputChannel;
@@ -22,8 +23,8 @@ public class MasterRunnable implements Runnable {
 	private Master replica = new Master();
 
 	public MasterRunnable(Socket peerSocket, ArrayList<Peer_Data> listOfPeerData) {
-		this.peerSocket=peerSocket;
-		this.listOfPeerData=listOfPeerData;
+		this.peerSocket = peerSocket;
+		this.listOfPeerData = listOfPeerData;
 	}
 
 	private int getNode() {
@@ -31,104 +32,104 @@ public class MasterRunnable implements Runnable {
 		nodeFinal++;
 		return (nodeFinal);
 	}
-	
-	
+
 	private ArrayList<String> convertStringToArray(String received) {
 		ArrayList<String> files = new ArrayList<String>();
-		String copy = received.substring(1,(received.length()-1));
+		String copy = received.substring(1, (received.length() - 1));
 		String a = copy.replace(" ", "");
 		String array[] = a.split(",");
-		for(int i=0; i<array.length;i++) {
+		for (int i = 0; i < array.length; i++) {
 			files.add(array[i]);
 		}
 		return files;
 	}
 
 	public void run() {
-		
+
 		try {
-			inputChannel =  new BufferedReader (new InputStreamReader (peerSocket.getInputStream()));
-			outputChannel = new PrintWriter (peerSocket.getOutputStream(),true);
-			
+			inputChannel = new BufferedReader(new InputStreamReader(peerSocket.getInputStream()));
+			outputChannel = new PrintWriter(peerSocket.getOutputStream(), true);
+
 			String msgPeer = inputChannel.readLine();
 			System.out.println(msgPeer);
-			
-			while(!msgPeer.startsWith("bye")) {
-					if(msgPeer.startsWith("initialConfiguration")) {
-						String msgPeerParts[]=msgPeer.split("@");
-						
-						int node = getNode();
-						ArrayList<String> files = convertStringToArray(msgPeerParts[1]);
-						
-						Random rnd = new Random();
-						int port = peerSocket.getPort()+ rnd.nextInt(200);
-						
-							Peer_Data peer = new Peer_Data(node,files,msgPeerParts[2],msgPeerParts[3],port);
-							listOfPeerData.add(peer);
-							
-							outputChannel.println(node+"@"+port);
+
+			while (!msgPeer.startsWith("bye")) {
+				if (msgPeer.startsWith("initialConfiguration")) {
+					String msgPeerParts[] = msgPeer.split("@");
+
+					int node = getNode();
+					ArrayList<String> files = convertStringToArray(msgPeerParts[1]);
+
+					Random rnd = new Random();
+					int port = peerSocket.getPort() + rnd.nextInt(200);
+
+					Peer_Data peer = new Peer_Data(node, files, msgPeerParts[2], msgPeerParts[3], port);
+					listOfPeerData.add(peer);
+
+					outputChannel.println(node + "@" + port);
+				}
+				if (msgPeer.startsWith("download")) {
+					boolean encontre = false;
+					String servers = "";
+					String msgPeerParts[] = msgPeer.split("@");
+					for (int i = 0; i < listOfPeerData.size(); i++) {
+						for (int j = 0; j < listOfPeerData.get(i).getFiles().size(); j++) {
+							if (listOfPeerData.get(i).getFiles().get(j).equalsIgnoreCase(msgPeerParts[1])) {
+								servers = servers + "@" + listOfPeerData.get(i).getName() + "@"
+										+ listOfPeerData.get(i).getPortServer() + "@" + listOfPeerData.get(i).getRute();
+								encontre = true;
+							}
+						}
 					}
-							if(msgPeer.startsWith("download")) {
-								boolean encontre = false;
-								String servers = "";
-								String msgPeerParts[]=msgPeer.split("@");
-									for(int i=0; i<listOfPeerData.size();i++) {
-										for(int j=0;j<listOfPeerData.get(i).getFiles().size();j++) {
-											if(listOfPeerData.get(i).getFiles().get(j).equalsIgnoreCase(msgPeerParts[1])) {
-												servers=servers+"@"+listOfPeerData.get(i).getName()+"@"+listOfPeerData.get(i).getPortServer()+"@"+listOfPeerData.get(i).getRute();
-												encontre = true;
-											}
-										}
-									}
-									if(!encontre) {
-										outputChannel.println("fileNotFound");	
-									}else {
-										outputChannel.println(servers);
-									}
-							} 
-							
-							if (msgPeer.startsWith("updateFiles")) {
-								String msgPeerParts[]=msgPeer.split("@");
-								int name = Integer.parseInt(msgPeerParts[1]);
-									for(int i=0;i<listOfPeerData.size();i++) {
-										if(listOfPeerData.get(i).getName()==name) {
-											listOfPeerData.get(i).addFile(msgPeerParts[2]);
-										}
-									}
-								log.info("[SERVER] - Update files of Peer");
-							}
-							
-							
-							//Posibilidad de levantar la replica.
-							//Solo update
-							replica.update(listOfPeerData);
-	
-							msgPeer = inputChannel.readLine();
-							if(msgPeer.startsWith("Bye")){
-								String msgPeerParts[] = msgPeer.split("@");
-								int name = Integer.parseInt(msgPeerParts[1]);
-									for(int i=0;i<listOfPeerData.size();i++) {
-										if(listOfPeerData.get(i).getName()==name) {
-											listOfPeerData.remove(i);
-										}
-									}
-									log.info("[SERVER] - Peer remove");
-									outputChannel.close();
-									inputChannel.close();
-							}
+					if (!encontre) {
+						outputChannel.println("fileNotFound");
+					} else {
+						outputChannel.println(servers);
+					}
+				}
+
+				if (msgPeer.startsWith("updateFiles")) {
+					String msgPeerParts[] = msgPeer.split("@");
+					int name = Integer.parseInt(msgPeerParts[1]);
+					for (int i = 0; i < listOfPeerData.size(); i++) {
+						if (listOfPeerData.get(i).getName() == name) {
+							listOfPeerData.get(i).addFile(msgPeerParts[2]);
+						}
+					}
+					System.out.println("[SERVER] - Update files of Peer");
+
+					// log.info("[SERVER] - Update files of Peer");
+				}
+
+				// Posibilidad de levantar la replica.
+				// Solo update
+				replica.update(listOfPeerData);
+
+				msgPeer = inputChannel.readLine();
+				if (msgPeer.startsWith("Bye")) {
+					String msgPeerParts[] = msgPeer.split("@");
+					int name = Integer.parseInt(msgPeerParts[1]);
+					for (int i = 0; i < listOfPeerData.size(); i++) {
+						if (listOfPeerData.get(i).getName() == name) {
+							listOfPeerData.remove(i);
+						}
+					}
+					System.out.println("[SERVER] - Peer remove");
+					// log.info("[SERVER] - Peer remove");
+					outputChannel.close();
+					inputChannel.close();
+				}
 			}
-			
-			
+
 		}
-	
-		 catch (IOException e) {
-			 if (!peerSocket.isConnected()) {
-				 log.error("[PEER] - ERROR Client disconnect - " + e.getMessage());
-			 }
+
+		catch (IOException e) {
+			if (!peerSocket.isConnected()) {
+				System.err.println("[PEER] - ERROR Client disconnect - " + e.getMessage());
+
+				// log.error("[PEER] - ERROR Client disconnect - " + e.getMessage());
+			}
 		}
-		
-		
-		
-		
-}
+
+	}
 }
