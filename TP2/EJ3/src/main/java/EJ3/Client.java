@@ -57,7 +57,7 @@ public class Client {
 						System.out.print("SUMA = " + writeArray(iRserver.suma(numerosA,numerosB), " "));
 					}
 				}catch(RemoteException e1) {
-					Thread.sleep(3000);
+					Thread.sleep(1000);
 					intentos++;
 				}
 				
