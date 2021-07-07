@@ -72,8 +72,8 @@ public class Client {
 			ImageIO.write(result, "JPG", fileResult);
 			finalTime = System.nanoTime();
 			
-			System.out.println("Done! Your file is located at " + generateRoute(route));
-			System.out.println("Processing time: " + ((finalTime-startTime)/1000000) + "ms");
+			System.out.println("Filtro aplicado! Su archivo se guardo en " + generateRoute(route));
+			System.out.println("Tiempo de proceso: " + ((finalTime-startTime)/1000000) + "ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

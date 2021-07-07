@@ -32,7 +32,7 @@ public class Client{
 	private static String validateDirectory(String directory) {
 		File d = new File(directory);
 			while(!d.isFile()) {
-				System.out.println("Error - " + directory + "is not a file. Please insert a new file");
+				System.out.println("Error - " + directory + "no es un archivo. Inserte la ruta de la imagen");			
 				directory = sc.nextLine();
 				d = new File(directory);
 			}
@@ -47,12 +47,12 @@ public class Client{
 			ISobel isobel = (ISobel) clientRMI.lookup("service");
 			System.out.println("Client RMI started");
 			System.out.println("-----------------------------------------");
-			System.out.println("Insert image to apply Sobel filter (Route)");
+			System.out.println("Ingrese la ruta de la imagen (JPG) a la cual se le aplicara el filtro Sobel");			
 			String route = sc.nextLine();
-			System.out.println("Insert numbers of cuts");
+			System.out.println("Ingrese el numero de cortes");
 			_CORTES=sc.nextInt();
 				while (route.isEmpty()){
-					System.out.println("Please insert a file");
+					System.out.println("ERROR!! Inserte la ruta de la imagen");
 					route = sc.nextLine();
 				}
 			
@@ -60,9 +60,9 @@ public class Client{
 			
 			File file = new File(route);
 			BufferedImage image = ImageIO.read(file);
-			System.out.println("Image upload successfully");
-			System.out.println("Your image will be cut into " + _CORTES + " parts");
-			System.out.println("Sobel filter in progress..");
+			System.out.println("Imagen cargada exitosamente");
+			System.out.println("Tu imagen se cortará en" + _CORTES + " partes");
+			System.out.println("Se le esta aplicando el filtro Sobel");
 			Imagen imagen = new Imagen(image,_CORTES,0);
 				
 				startTime = System.nanoTime();
@@ -72,8 +72,8 @@ public class Client{
 			ImageIO.write(a.getImage(), "JPG", fileResult);
 			finalTime= System.nanoTime();
 			
-			System.out.println("Done! Your file is located at " + generateRoute(route));
-			System.out.println("Processing time: " + ((finalTime-startTime)/1000000) + "ms");
+			System.out.println("Filtro aplicado! Su archivo se guardo en " + generateRoute(route));
+			System.out.println("Tiempo de proceso: " + ((finalTime-startTime)/1000000) + "ms");
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
